@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.bolnizar.notfollowingback.R;
+import com.bolnizar.notfollowingback.utils.Constants;
 
 /**
  * Created by Musafir on 12/18/2016.
@@ -36,7 +38,7 @@ public class LoginWebDialogFragment extends DialogFragment {
     }
 
     private void initializeWebClient() {
-        mWebView.setWebViewClient(new WebViewClient(){
+        mWebView.setWebViewClient(new WebViewClient() {
             @SuppressWarnings("deprecation")
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -52,8 +54,13 @@ public class LoginWebDialogFragment extends DialogFragment {
             }
 
             private boolean handleUri(Uri uri) {
-
-                
+                String url = uri.toString();
+                if (url.startsWith(Constants.REDIRECT_URL)) {
+                    String accessToken = url.split("#access_token=")[1];
+                    Toast.makeText(getContext(), accessToken, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
             }
         });
     }
